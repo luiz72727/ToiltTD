@@ -9,7 +9,7 @@ local character = player.Character or player.CharacterAdded:Wait()
 repeat task.wait() until character:FindFirstChild("HumanoidRootPart")
 
 -- Etapa 1: Teleporta pro portal Nightmare (ajuste se necessário)
-local nightmarePosition = Vector3.new(417.38, 300, 100) -- chute baseado no print
+local nightmarePosition = Vector3.new(417.38, 162, -6) -- chute baseado no print
 character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(nightmarePosition)
 
 
