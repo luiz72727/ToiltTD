@@ -14,44 +14,44 @@ character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(nightmarePosition
 
 
 -- Etapa 2: Aguarda alguns segundos para o jogo te colocar na partida
-task.wait(10)
+task.wait(2)
 
--- Etapa 3: Procura o botão "Start" e clica automaticamente
-local function autoStart()
-    local gui = player:WaitForChild("PlayerGui")
-    
-    for _, v in pairs(gui:GetDescendants()) do
-        if v:IsA("TextButton") and v.Text:lower():find("start") then
-            task.wait(1)
-            print("🟢 Clicando no botão Start!")
-            pcall(function()
-                v:Activate()
-            end)
-            break
-        end
-    end
-end
-
--- Aguarda o botão aparecer e executa o clique
+-- Etapa 3: Auto Start inteligente
+local gui = player:WaitForChild("PlayerGui")
 local success = false
-for i = 1, 20 do -- tenta por 20 vezes
-    local gui = player:FindFirstChild("PlayerGui")
-    if gui then
-        for _, v in pairs(gui:GetDescendants()) do
-            if v:IsA("TextButton") and v.Text:lower():find("start") then
+
+for i = 1, 60 do -- tenta por até 30 segundos
+    for _, v in pairs(gui:GetDescendants()) do
+        if v:IsA("TextButton") or v:IsA("ImageButton") then
+            local text = v.Text or ""
+            if text:lower():find("start") then
+                print("✅ Botão Start encontrado, tentando clicar...")
+
+                -- Tenta clicar com segurança
                 pcall(function()
                     v:Activate()
                 end)
+
+                if v:FindFirstChildOfClass("LocalScript") or v.MouseButton1Click then
+                    pcall(function()
+                        v.MouseButton1Click:Fire()
+                    end)
+                end
+
                 success = true
-                print("✅ Start clicado!")
                 break
             end
         end
     end
-    if success then break end
-    task.wait(1)
+
+    if success then
+        print("🎮 Partida iniciada com sucesso!")
+        break
+    end
+
+    task.wait(0.5) -- espera meio segundo antes de tentar novamente
 end
 
 if not success then
-    warn("❌ Botão Start não encontrado.")
+    warn("❌ Botão 'Start' não foi encontrado ou clicado.")
 end
